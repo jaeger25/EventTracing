@@ -2,4 +2,9 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/EventTracing/v16
+/.vs
+/EventTracing/Generated Files
+/packages
+/obj
+/bin
+*.user

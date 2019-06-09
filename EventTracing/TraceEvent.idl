@@ -1,0 +1,48 @@
+namespace FourShot.EventTracing
+{
+    enum TraceEventOpCode
+    {
+        Info = 0,
+        Start,
+        Stop,
+        DataCollectionStart,
+        DataCollectionEnd,
+        Extension,
+        Reply,
+        Resume,
+        Suspend,
+        Send,
+        Receive = 240
+    };
+
+    enum TraceEventLevel
+    {
+        LogAlways,
+        Critical,
+        Error,
+        Warning,
+        Informational,
+        Verbose
+    };
+
+    [default_interface]
+    runtimeclass TraceEventHeader
+    {
+        Guid ActivityId { get; };
+        TraceEventOpCode OpCode { get; };
+        TraceEventLevel Level { get; };
+        UInt32 ProcessId { get; };
+        UInt32 ThreadId { get; };
+        Windows.Foundation.DateTime Timestamp{ get; };
+        Windows.Foundation.DateTime TimestampUtc { get; };
+    }
+
+    [default_interface]
+    runtimeclass TraceEvent
+    {
+        TraceEventHeader Header { get; };
+        String Name { get; };
+        String ProviderName { get; };
+        Windows.Foundation.Collections.IMapView<String, String> Properties { get; };
+    }
+}

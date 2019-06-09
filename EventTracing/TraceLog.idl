@@ -1,0 +1,25 @@
+import "TraceEvent.idl";
+
+namespace FourShot.EventTracing
+{
+    [default_interface]
+    runtimeclass TraceLog
+    {
+        static Windows.Foundation.IAsyncOperation<TraceLog> OpenAsync(String etlLogFilePath);
+
+        event Windows.Foundation.TypedEventHandler<TraceLog, EventProcessedEventArgs> EventProcessed;
+
+        Windows.Foundation.DateTime StartTimeUtc { get; };
+        Windows.Foundation.DateTime EndTimeUtc { get; };
+        Windows.Foundation.DateTime StartTime { get; };
+        Windows.Foundation.DateTime EndTime { get; };
+
+        Windows.Foundation.IAsyncAction ProcessEventsAsync();
+    }
+
+    [default_interface]
+    runtimeclass EventProcessedEventArgs
+    {
+        TraceEvent Event { get; };
+    }
+}
