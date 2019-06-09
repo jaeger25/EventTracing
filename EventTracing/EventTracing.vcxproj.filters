@@ -27,6 +27,7 @@
   <ItemGroup>
     <None Include="EventTracing.def" />
     <None Include="packages.config" />
+    <None Include="Package.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertySheet.props" />

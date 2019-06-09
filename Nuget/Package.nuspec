@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package >
+    <metadata>
+        <id>FourShot.EventTracing</id>
+        <version>1.0.1</version>
+        <authors>Matt Jaeger</authors>
+        <owners>Matt Jaeger</owners>
+        <projectUrl>https://github.com/jaeger25/EventTracing</projectUrl>
+        <license type="expression">MIT</license>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>C++/WinRT component wrapping windows event tracing APIs</description>
+        <releaseNotes>C++/WinRT component wrapping windows event tracing APIs</releaseNotes>
+        <copyright>Copyright 2019</copyright>
+        <tags>FourShot c++/winrt UWP Tracelogging EventTracing ETW TDH</tags>
+    </metadata>
+
+    <files>
+        <!-- WinMd and IntelliSense files -->
+        <file src="..\bin\x64\Release\EventTracing\FourShot.EventTracing.winmd" target="lib\uap10.0"/>
+        <file src="..\bin\x64\Release\EventTracing\FourShot.EventTracing.xml" target="lib\uap10.0"/>
+
+        <!-- DLLs and resources -->
+        <file src="..\bin\ARM\Release\EventTracing\FourShot.EventTracing.dll" target="runtimes\win10-arm\native"/>
+        <file src="..\bin\ARM\Release\EventTracing\FourShot.EventTracing.pri" target="runtimes\win10-arm\native"/>
+        <file src="..\bin\ARM\Release\EventTracing\FourShot.EventTracing.pdb" target="runtimes\win10-arm\native"/>
+
+        <file src="..\bin\ARM64\Release\EventTracing\FourShot.EventTracing.dll" target="runtimes\win10-arm64\native"/>
+        <file src="..\bin\ARM64\Release\EventTracing\FourShot.EventTracing.pri" target="runtimes\win10-arm64\native"/>
+        <file src="..\bin\ARM64\Release\EventTracing\FourShot.EventTracing.pdb" target="runtimes\win10-arm64\native"/>
+
+        <file src="..\bin\x64\Release\EventTracing\FourShot.EventTracing.dll" target="runtimes\win10-x64\native"/>
+        <file src="..\bin\x64\Release\EventTracing\FourShot.EventTracing.pri" target="runtimes\win10-x64\native"/>
+        <file src="..\bin\x64\Release\EventTracing\FourShot.EventTracing.pdb" target="runtimes\win10-x64\native"/>
+
+        <file src="..\bin\x86\Release\EventTracing\FourShot.EventTracing.dll" target="runtimes\win10-x86\native"/>
+        <file src="..\bin\x86\Release\EventTracing\FourShot.EventTracing.pri" target="runtimes\win10-x86\native"/>
+        <file src="..\bin\x86\Release\EventTracing\FourShot.EventTracing.pdb" target="runtimes\win10-x86\native"/>
+    </files>
+</package>

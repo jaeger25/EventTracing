@@ -15,7 +15,7 @@
     <ItemDefinitionGroup />
     <ItemGroup>
         <ProjectReference Include="..\EventTracing\EventTracing.vcxproj" />
-        <ReferenceCopyLocalPaths Include="$(OutDir)..\EventTracing\EventTracing.dll">
+        <ReferenceCopyLocalPaths Include="$(OutDir)..\EventTracing\FourShot.EventTracing.dll">
             <IsWinMDFile>false</IsWinMDFile>
         </ReferenceCopyLocalPaths>
     </ItemGroup>
