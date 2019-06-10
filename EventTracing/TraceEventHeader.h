@@ -7,6 +7,7 @@ namespace winrt::FourShot::EventTracing::implementation
     {
         TraceEventHeader(PEVENT_HEADER pEventHeader, const TIME_ZONE_INFORMATION& timeZoneInfo);
 
+        uint16_t Id() const noexcept;
         winrt::guid ActivityId() const noexcept;
         TraceEventOpCode OpCode() const noexcept;
         TraceEventLevel Level() const noexcept;
@@ -24,5 +25,6 @@ namespace winrt::FourShot::EventTracing::implementation
         TraceEventLevel m_level;
         uint32_t m_processId;
         uint32_t m_threadId;
+        uint16_t m_id;
     };
 }

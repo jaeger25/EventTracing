@@ -37,19 +37,29 @@ namespace winrt::FourShot::EventTracing::implementation
         m_eventProcessedEvent.remove(token);
     }
 
+    DateTime TraceLog::BootTime() const noexcept
+    {
+        return m_bootTime;
+    }
+
+    DateTime TraceLog::BootTimeUtc() const noexcept
+    {
+        return m_bootTimeUtc;
+    }
+
     DateTime TraceLog::StartTime() const noexcept
     {
         return m_startTime;
     }
 
-    DateTime TraceLog::EndTime() const noexcept
-    {
-        return m_endTime;
-    }
-
     DateTime TraceLog::StartTimeUtc() const noexcept
     {
         return m_startTimeUtc;
+    }
+
+    DateTime TraceLog::EndTime() const noexcept
+    {
+        return m_endTime;
     }
 
     DateTime TraceLog::EndTimeUtc() const noexcept
@@ -91,6 +101,9 @@ namespace winrt::FourShot::EventTracing::implementation
                 reinterpret_cast<PUCHAR>(pHeader) +
                 2 * (pHeader->PointerSize - sizeof(PVOID)));
         }
+
+        m_bootTime = DateTimeHelper::ToDateTimeLocal(pHeader->BootTime, m_timeZoneInfo);
+        m_bootTimeUtc = DateTimeHelper::ToDateTimeUtc(pHeader->BootTime);
     }
 
     void TraceLog::ProcessEvent(PEVENT_RECORD pEvent) noexcept

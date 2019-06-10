@@ -13,9 +13,11 @@ namespace winrt::FourShot::EventTracing::implementation
         event_token EventProcessed(TypedEventHandler<EventTracing::TraceLog, EventTracing::EventProcessedEventArgs> const& handler);
         void EventProcessed(event_token const& token) noexcept;
 
+        DateTime BootTime() const noexcept;
+        DateTime BootTimeUtc() const noexcept;
         DateTime StartTime() const noexcept;
-        DateTime EndTime() const noexcept;
         DateTime StartTimeUtc() const noexcept;
+        DateTime EndTime() const noexcept;
         DateTime EndTimeUtc() const noexcept;
 
         IAsyncAction ProcessEventsAsync();
@@ -31,9 +33,11 @@ namespace winrt::FourShot::EventTracing::implementation
 
         wil::unique_tracehandle m_trace;
         ULONG m_pointerSize;
+        DateTime m_bootTime;
+        DateTime m_bootTimeUtc;
         DateTime m_startTime;
-        DateTime m_endTime;
         DateTime m_startTimeUtc;
+        DateTime m_endTime;
         DateTime m_endTimeUtc;
         TIME_ZONE_INFORMATION m_timeZoneInfo;
         std::vector<char> m_eventBuffer;
