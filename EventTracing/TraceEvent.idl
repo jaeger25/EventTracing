@@ -28,6 +28,7 @@ namespace FourShot.EventTracing
     [default_interface]
     runtimeclass TraceEventHeader
     {
+        UInt16 Id { get; };
         Guid ActivityId { get; };
         TraceEventOpCode OpCode { get; };
         TraceEventLevel Level { get; };

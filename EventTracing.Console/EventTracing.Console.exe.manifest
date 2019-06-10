@@ -2,7 +2,7 @@
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
     <assemblyIdentity version="1.0.0.0" name="EventTracing.Console" />
 
-    <file name="EventTracing.dll">
+    <file name="FourShot.EventTracing.dll">
         <activatableClass
             name="FourShot.EventTracing.TraceLog"
             threadingModel="both"
