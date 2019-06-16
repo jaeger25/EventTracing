@@ -27,7 +27,7 @@ namespace winrt::FourShot::EventTracing::implementation
 
         void ReadTraceHeader(PTRACE_LOGFILE_HEADER pHeader) noexcept;
         void ProcessEvent(PEVENT_RECORD pEvent) noexcept;
-        std::pair<hstring, hstring> ProcessEventProperty(PEVENT_RECORD pEvent, PTRACE_EVENT_INFO pEventInfo, ULONG propIndex, PBYTE* ppUserData, PBYTE pEndOfUserData);
+        std::vector<std::pair<hstring, hstring>> ProcessEventProperty(PEVENT_RECORD pEvent, PTRACE_EVENT_INFO pEventInfo, ULONG propIndex, PBYTE* ppUserData, PBYTE pEndOfUserData);
 
         event<TypedEventHandler<EventTracing::TraceLog, EventTracing::EventProcessedEventArgs>> m_eventProcessedEvent;
 

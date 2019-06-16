@@ -139,7 +139,11 @@ namespace winrt::FourShot::EventTracing::implementation
             std::map<hstring, hstring> properties;
             for (ULONG i = 0; i < pEventInfo->TopLevelPropertyCount; i++)
             {
-                properties.emplace(ProcessEventProperty(pEvent, pEventInfo, i, &pUserData, pEndOfUserData));
+                auto propertyPairs = ProcessEventProperty(pEvent, pEventInfo, i, &pUserData, pEndOfUserData);
+                for (auto&& pair : propertyPairs)
+                {
+                    properties.emplace(std::move(pair));
+                }
             }
 
             auto traceEvent = winrt::make<TraceEvent>(&pEvent->EventHeader, pEventInfo, m_timeZoneInfo, std::move(properties));
@@ -161,16 +165,16 @@ namespace winrt::FourShot::EventTracing::implementation
         CATCH_LOG();
     }
 
-    std::pair<hstring, hstring> TraceLog::ProcessEventProperty(PEVENT_RECORD pEvent, PTRACE_EVENT_INFO pEventInfo, ULONG propIndex, PBYTE* ppUserData, PBYTE pEndOfUserData)
+    std::vector<std::pair<hstring, hstring>> TraceLog::ProcessEventProperty(PEVENT_RECORD pEvent, PTRACE_EVENT_INFO pEventInfo, ULONG propIndex, PBYTE* ppUserData, PBYTE pEndOfUserData)
     {
         EVENT_PROPERTY_INFO& propInfo = pEventInfo->EventPropertyInfoArray[propIndex];
 
-        PWSTR propName = TEI_PROPERTY_NAME(pEventInfo, &propInfo);
+        hstring propName = TEI_PROPERTY_NAME(pEventInfo, &propInfo);
         USHORT propLength = TdhHelper::GetPropertyLength(pEvent, pEventInfo, propIndex, *ppUserData);
 
         // Get the size of the array if the property is an array
         USHORT arraySize = TdhHelper::GetArraySize(pEvent, pEventInfo, propIndex);
-        std::pair<hstring, hstring> property = { propName, L"" };
+        std::vector<std::pair<hstring, hstring>> propertyPairs;
 
         for (USHORT i = 0; i < arraySize; i++)
         {
@@ -182,13 +186,24 @@ namespace winrt::FourShot::EventTracing::implementation
 
                 for (USHORT j = propInfo.structType.StructStartIndex; j < lastMemberIndex; j++)
                 {
-                    auto structProperty = ProcessEventProperty(pEvent, pEventInfo, j, ppUserData, pEndOfUserData);
-                    property.first = property.first + L"." + structProperty.first;
-                    property.second = std::move(structProperty.second);
+                    auto structPropertyPairs = ProcessEventProperty(pEvent, pEventInfo, j, ppUserData, pEndOfUserData);
+                    for (auto&& structPair : structPropertyPairs)
+                    {
+                        hstring structPropName =
+                            arraySize == 1 ? propName + L"." + structPair.first :
+                            propName + L"[" + i + L"]" + L"." + structPair.first;
+
+                        propertyPairs.emplace_back(propName + L"." + structPair.first, std::move(structPair.second));
+                    }
                 }
             }
             else
             {
+                if (i == 0)
+                {
+                    propertyPairs.emplace_back(std::move(propName), L"");
+                }
+
                 PWSTR pFormattedData = reinterpret_cast<LPWSTR>(m_formattedDataBuffer.data());
                 ULONG formattedDataBufferSize = static_cast<ULONG>(m_formattedDataBuffer.capacity());
                 USHORT userDataConsumed;
@@ -205,17 +220,17 @@ namespace winrt::FourShot::EventTracing::implementation
                     pFormattedData,
                     &userDataConsumed));
 
-                property.second = property.second + pFormattedData;
+                propertyPairs[0].second = propertyPairs[0].second + pFormattedData;
                 *ppUserData += userDataConsumed;
-            }
 
-            if (i + 1 < arraySize)
-            {
-                property.second = property.second + L", ";
+                if (i + 1 < arraySize)
+                {
+                    propertyPairs[0].second = propertyPairs[0].second + L", ";
+                }
             }
         }
 
-        return property;
+        return propertyPairs;
     }
 
     /*static*/ IAsyncOperation<EventTracing::TraceLog> TraceLog::OpenAsync(hstring etlLogFilePath)
