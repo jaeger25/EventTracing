@@ -107,14 +107,14 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);WINAPI_FAMILY=WINAPI_FAMILY_DESKTOP_APP</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">onecoreuap.lib;tdh.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">onecoreuap.lib;tdh.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">onecoreuap.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">onecoreuap.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Link>
-      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">onecoreuap.lib;tdh.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">onecoreuap.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Link>
-      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">onecoreuap.lib;tdh.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">onecoreuap.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">xcopy /s $(TargetPath) $(OutDir)..\EventTracing.Console\ /Y /I
@@ -144,14 +144,14 @@ xcopy /s $(CppWinRTProjectWinMD) $(OutDir)..\EventTracing.Console\ /Y /I</Comman
       <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)</XMLDocumentationFileName>
     </ClCompile>
     <Link>
-      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">onecoreuap.lib;tdh.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">onecoreuap.lib;tdh.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">onecoreuap.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">onecoreuap.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Link>
-      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">onecoreuap.lib;tdh.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">onecoreuap.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Link>
-      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">onecoreuap.lib;tdh.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">onecoreuap.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">xcopy /s $(TargetPath) $(OutDir)..\EventTracing.Console\ /Y /I
@@ -172,6 +172,7 @@ xcopy /s $(CppWinRTProjectWinMD) $(OutDir)..\EventTracing.Console\ /Y /I</Comman
     <ClInclude Include="DateTimeHelper.h" />
     <ClInclude Include="EventProcessedEventArgs.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="TdhWrapper.h" />
     <ClInclude Include="TraceEventHeader.h" />
     <ClInclude Include="TraceLog.h">
       <DependentUpon>TraceLog.idl</DependentUpon>
@@ -188,6 +189,7 @@ xcopy /s $(CppWinRTProjectWinMD) $(OutDir)..\EventTracing.Console\ /Y /I</Comman
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TdhWrapper.cpp" />
     <ClCompile Include="TraceEventHeader.cpp" />
     <ClCompile Include="TraceLog.cpp">
       <DependentUpon>TraceLog.idl</DependentUpon>

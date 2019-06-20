@@ -6,6 +6,7 @@
 #include "TraceEvent.h"
 #include "TdhHelper.h"
 #include "DateTimeHelper.h"
+#include "TdhWrapper.h"
 
 using namespace std::chrono_literals;
 
@@ -15,6 +16,9 @@ namespace winrt::FourShot::EventTracing::implementation
         m_startTimeUtc(DateTime::max()),
         m_endTimeUtc(DateTime::min())
     {
+        m_tdhLibHandle.reset(LoadLibrary(L"tdh.dll"));
+        THROW_LAST_ERROR_IF(m_tdhLibHandle.get() == INVALID_HANDLE_VALUE);
+
         EVENT_TRACE_LOGFILE trace = {};
         trace.LogFileName = const_cast<wchar_t*>(etlLogFilePath.data());
         trace.EventRecordCallback = static_cast<PEVENT_RECORD_CALLBACK>(ProcessEventCallback);
@@ -118,7 +122,7 @@ namespace winrt::FourShot::EventTracing::implementation
 
             ULONG bufferSize = static_cast<ULONG>(m_eventBuffer.capacity());
             PTRACE_EVENT_INFO pEventInfo = reinterpret_cast<PTRACE_EVENT_INFO>(m_eventBuffer.data());
-            TDHSTATUS status = TdhGetEventInformation(pEvent, 0, nullptr, pEventInfo, &bufferSize);
+            TDHSTATUS status = TdhWrapper::TdhGetEventInformation_Wrap(m_tdhLibHandle.get(), pEvent, 0, nullptr, pEventInfo, &bufferSize);
             if (status == ERROR_NOT_FOUND)
             {
                 return;
@@ -170,10 +174,10 @@ namespace winrt::FourShot::EventTracing::implementation
         EVENT_PROPERTY_INFO& propInfo = pEventInfo->EventPropertyInfoArray[propIndex];
 
         hstring propName = TEI_PROPERTY_NAME(pEventInfo, &propInfo);
-        USHORT propLength = TdhHelper::GetPropertyLength(pEvent, pEventInfo, propIndex, *ppUserData);
+        USHORT propLength = TdhHelper::GetPropertyLength(m_tdhLibHandle.get(), pEvent, pEventInfo, propIndex, *ppUserData);
 
         // Get the size of the array if the property is an array
-        USHORT arraySize = TdhHelper::GetArraySize(pEvent, pEventInfo, propIndex);
+        USHORT arraySize = TdhHelper::GetArraySize(m_tdhLibHandle.get(), pEvent, pEventInfo, propIndex);
         std::vector<std::pair<hstring, hstring>> propertyPairs;
 
         for (USHORT i = 0; i < arraySize; i++)
@@ -207,7 +211,8 @@ namespace winrt::FourShot::EventTracing::implementation
                 PWSTR pFormattedData = reinterpret_cast<LPWSTR>(m_formattedDataBuffer.data());
                 ULONG formattedDataBufferSize = static_cast<ULONG>(m_formattedDataBuffer.capacity());
                 USHORT userDataConsumed;
-                THROW_IF_WIN32_ERROR(TdhFormatProperty(
+                THROW_IF_WIN32_ERROR(TdhWrapper::TdhFormatProperty_Wrap(
+                    m_tdhLibHandle.get(),
                     pEventInfo,
                     nullptr,
                     m_pointerSize,

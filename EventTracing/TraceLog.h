@@ -32,6 +32,7 @@ namespace winrt::FourShot::EventTracing::implementation
         event<TypedEventHandler<EventTracing::TraceLog, EventTracing::EventProcessedEventArgs>> m_eventProcessedEvent;
 
         wil::unique_tracehandle m_trace;
+        wil::unique_hmodule m_tdhLibHandle;
         ULONG m_pointerSize;
         DateTime m_bootTime;
         DateTime m_bootTimeUtc;

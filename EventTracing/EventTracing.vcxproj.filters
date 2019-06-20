@@ -16,6 +16,7 @@
     <ClCompile Include="TdhHelper.cpp" />
     <ClCompile Include="DateTimeHelper.cpp" />
     <ClCompile Include="TraceEventHeader.cpp" />
+    <ClCompile Include="TdhWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -23,6 +24,7 @@
     <ClInclude Include="TdhHelper.h" />
     <ClInclude Include="DateTimeHelper.h" />
     <ClInclude Include="TraceEventHeader.h" />
+    <ClInclude Include="TdhWrapper.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="EventTracing.def" />
