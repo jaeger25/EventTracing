@@ -13,6 +13,7 @@ namespace winrt::FourShot::EventTracing::implementation
         event_token EventProcessed(TypedEventHandler<EventTracing::TraceLog, EventTracing::EventProcessedEventArgs> const& handler);
         void EventProcessed(event_token const& token) noexcept;
 
+        uint32_t UnprocessedEventCount() const noexcept;
         DateTime BootTime() const noexcept;
         DateTime BootTimeUtc() const noexcept;
         DateTime StartTime() const noexcept;
@@ -33,14 +34,15 @@ namespace winrt::FourShot::EventTracing::implementation
 
         wil::unique_tracehandle m_trace;
         wil::unique_hmodule m_tdhLibHandle;
-        ULONG m_pointerSize;
         DateTime m_bootTime;
         DateTime m_bootTimeUtc;
         DateTime m_startTime;
         DateTime m_startTimeUtc;
         DateTime m_endTime;
         DateTime m_endTimeUtc;
-        TIME_ZONE_INFORMATION m_timeZoneInfo;
+        ULONG m_pointerSize = 0;
+        uint32_t m_unprocessedEventCount = 0;
+        TIME_ZONE_INFORMATION m_timeZoneInfo = {};
         std::vector<char> m_eventBuffer;
         std::vector<char> m_propertyBuffer;
         std::vector<char> m_formattedDataBuffer;

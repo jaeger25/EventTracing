@@ -41,6 +41,11 @@ namespace winrt::FourShot::EventTracing::implementation
         m_eventProcessedEvent.remove(token);
     }
 
+    uint32_t TraceLog::UnprocessedEventCount() const noexcept
+    {
+        return m_unprocessedEventCount;
+    }
+
     DateTime TraceLog::BootTime() const noexcept
     {
         return m_bootTime;
@@ -106,8 +111,12 @@ namespace winrt::FourShot::EventTracing::implementation
                 2 * (pHeader->PointerSize - sizeof(PVOID)));
         }
 
-        m_bootTime = DateTimeHelper::ToDateTimeLocal(pHeader->BootTime, m_timeZoneInfo);
-        m_bootTimeUtc = DateTimeHelper::ToDateTimeUtc(pHeader->BootTime);
+        try
+        {
+            m_bootTimeUtc = DateTimeHelper::ToDateTimeUtc(pHeader->BootTime);
+            m_bootTime = DateTimeHelper::ToDateTimeLocal(pHeader->BootTime, m_timeZoneInfo);
+        }
+        CATCH_LOG();
     }
 
     void TraceLog::ProcessEvent(PEVENT_RECORD pEvent) noexcept
@@ -125,12 +134,14 @@ namespace winrt::FourShot::EventTracing::implementation
             TDHSTATUS status = TdhWrapper::TdhGetEventInformation_Wrap(m_tdhLibHandle.get(), pEvent, 0, nullptr, pEventInfo, &bufferSize);
             if (status == ERROR_NOT_FOUND)
             {
+                m_unprocessedEventCount++;
                 return;
             }
             THROW_IF_WIN32_ERROR(status);
 
             if (pEventInfo->DecodingSource != DECODING_SOURCE::DecodingSourceTlg)
             {
+                m_unprocessedEventCount++;
                 return;
             }
 
@@ -151,9 +162,6 @@ namespace winrt::FourShot::EventTracing::implementation
             }
 
             auto traceEvent = winrt::make<TraceEvent>(&pEvent->EventHeader, pEventInfo, m_timeZoneInfo, std::move(properties));
-            auto args = winrt::make<EventProcessedEventArgs>(std::move(traceEvent));
-            m_eventProcessedEvent(*this, args);
-
             auto eventHeader = traceEvent.Header();
             if (eventHeader.TimestampUtc() < m_startTimeUtc)
             {
@@ -165,8 +173,16 @@ namespace winrt::FourShot::EventTracing::implementation
                 m_endTime = eventHeader.Timestamp();
                 m_endTimeUtc = eventHeader.TimestampUtc();
             }
+
+            auto args = winrt::make<EventProcessedEventArgs>(std::move(traceEvent));
+            m_eventProcessedEvent(*this, args);
         }
-        CATCH_LOG();
+        catch (...)
+        {
+            LOG_CAUGHT_EXCEPTION();
+
+            m_unprocessedEventCount++;
+        }
     }
 
     std::vector<std::pair<hstring, hstring>> TraceLog::ProcessEventProperty(PEVENT_RECORD pEvent, PTRACE_EVENT_INFO pEventInfo, ULONG propIndex, PBYTE* ppUserData, PBYTE pEndOfUserData)

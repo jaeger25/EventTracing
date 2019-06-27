@@ -19,13 +19,13 @@ namespace winrt::FourShot::EventTracing
         fileTime.dwLowDateTime = dateTimeInt.LowPart;
 
         SYSTEMTIME sysTime;
-        FAIL_FAST_LAST_ERROR_IF(!FileTimeToSystemTime(&fileTime, &sysTime));
+        THROW_LAST_ERROR_IF(!FileTimeToSystemTime(&fileTime, &sysTime));
 
         SYSTEMTIME sysTimeLocal;
-        FAIL_FAST_LAST_ERROR_IF(!SystemTimeToTzSpecificLocalTime(&timeZoneInfo, &sysTime, &sysTimeLocal));
+        THROW_LAST_ERROR_IF(!SystemTimeToTzSpecificLocalTime(&timeZoneInfo, &sysTime, &sysTimeLocal));
 
         FILETIME fileTimeLocal;
-        FAIL_FAST_LAST_ERROR_IF(!SystemTimeToFileTime(&sysTimeLocal, &fileTimeLocal));
+        THROW_LAST_ERROR_IF(!SystemTimeToFileTime(&sysTimeLocal, &fileTimeLocal));
 
         return clock::from_file_time(fileTimeLocal);
     }

@@ -9,6 +9,7 @@ namespace FourShot.EventTracing
 
         event Windows.Foundation.TypedEventHandler<TraceLog, EventProcessedEventArgs> EventProcessed;
 
+        UInt32 UnprocessedEventCount { get; };
         Windows.Foundation.DateTime BootTime { get; };
         Windows.Foundation.DateTime BootTimeUtc { get; };
         Windows.Foundation.DateTime StartTime{ get; };
