@@ -14,6 +14,7 @@
 #include <in6addr.h>
 
 #include <wil\result_macros.h>
+#include <wil\result_originate.h>
 #include <wil\resource.h>
 
 namespace winrt
