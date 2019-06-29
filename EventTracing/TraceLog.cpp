@@ -12,9 +12,7 @@ using namespace std::chrono_literals;
 
 namespace winrt::FourShot::EventTracing::implementation
 {
-    TraceLog::TraceLog(const hstring& etlLogFilePath) :
-        m_startTimeUtc(DateTime::max()),
-        m_endTimeUtc(DateTime::min())
+    TraceLog::TraceLog(const hstring& etlLogFilePath)
     {
         m_tdhLibHandle.reset(LoadLibrary(L"tdh.dll"));
         THROW_LAST_ERROR_IF(m_tdhLibHandle.get() == INVALID_HANDLE_VALUE);
@@ -163,16 +161,14 @@ namespace winrt::FourShot::EventTracing::implementation
 
             auto traceEvent = winrt::make<TraceEvent>(&pEvent->EventHeader, pEventInfo, m_timeZoneInfo, std::move(properties));
             auto eventHeader = traceEvent.Header();
-            if (eventHeader.TimestampUtc() < m_startTimeUtc)
+            if (m_startTimeUtc == DateTime{})
             {
                 m_startTime = eventHeader.Timestamp();
                 m_startTimeUtc = eventHeader.TimestampUtc();
             }
-            if (eventHeader.TimestampUtc() > m_endTimeUtc)
-            {
-                m_endTime = eventHeader.Timestamp();
-                m_endTimeUtc = eventHeader.TimestampUtc();
-            }
+
+            m_endTime = eventHeader.Timestamp();
+            m_endTimeUtc = eventHeader.TimestampUtc();
 
             auto args = winrt::make<EventProcessedEventArgs>(std::move(traceEvent));
             m_eventProcessedEvent(*this, args);

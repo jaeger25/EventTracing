@@ -1,2 +1,2 @@
 del *.nupkg
-nuget pack Package.nuspec
+nuget pack Package.nuspec -properties %*
