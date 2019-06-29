@@ -12,7 +12,7 @@ namespace winrt::FourShot::EventTracing
         return clock::from_file_time(fileTime);
     }
 
-    DateTime DateTimeHelper::ToDateTimeLocal(const LARGE_INTEGER& dateTimeInt, const TIME_ZONE_INFORMATION& timeZoneInfo) noexcept
+    DateTime DateTimeHelper::ToDateTimeLocal(const LARGE_INTEGER& dateTimeInt, const TIME_ZONE_INFORMATION& timeZoneInfo)
     {
         FILETIME fileTime;
         fileTime.dwHighDateTime = dateTimeInt.HighPart;
