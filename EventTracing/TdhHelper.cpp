@@ -46,11 +46,13 @@ namespace winrt::FourShot::EventTracing
                 {
                     return sizeof(IN6_ADDR);
                 }
-                else if (TDH_INTYPE_UNICODESTRING == propertyInfo.nonStructType.InType ||
-                    TDH_INTYPE_ANSISTRING == propertyInfo.nonStructType.InType ||
-                    (propertyInfo.Flags & PropertyStruct) == PropertyStruct)
+                else if (TDH_INTYPE_UNICODESTRING == propertyInfo.nonStructType.InType)
                 {
-                    return propertyInfo.length;
+                    return static_cast<USHORT>(wcslen(reinterpret_cast<LPWSTR>(pUserData)));
+                }
+                else if (TDH_INTYPE_ANSISTRING == propertyInfo.nonStructType.InType)
+                {
+                    return static_cast<USHORT>(strlen(reinterpret_cast<LPSTR>(pUserData)));
                 }
                 else if (TDH_INTYPE_SID == propertyInfo.nonStructType.InType)
                 {

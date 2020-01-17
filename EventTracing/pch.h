@@ -14,6 +14,8 @@
 
 #include <tdh.h>
 #include <in6addr.h>
+#include <wchar.h>
+#include <string.h>
 
 #include <wil\result_macros.h>
 #include <wil\result_originate.h>
