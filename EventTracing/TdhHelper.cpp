@@ -65,6 +65,15 @@ namespace winrt::FourShot::EventTracing
                     UCHAR subAuthCount = pUserData[1];
                     return MinSidSize + subAuthCount * sizeof(ULONG);
                 }
+                else if (TDH_INTYPE_COUNTEDSTRING == propertyInfo.nonStructType.InType ||
+                    TDH_INTYPE_COUNTEDANSISTRING == propertyInfo.nonStructType.InType)
+                {
+                    return *(USHORT*)pUserData + 2;
+                }
+                else if (TDH_INTYPE_NULL == propertyInfo.nonStructType.InType)
+                {
+                    return 0;
+                }
                 else
                 {
                     THROW_WIN32(ERROR_EVT_INVALID_EVENT_DATA);

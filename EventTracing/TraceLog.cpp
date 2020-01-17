@@ -219,6 +219,10 @@ namespace winrt::FourShot::EventTracing::implementation
                 {
                     propertyPairs.emplace_back(std::move(propName), L"");
                 }
+                if (propLength == 0)
+                {
+                    break;
+                }
 
                 PWSTR pFormattedData = reinterpret_cast<LPWSTR>(m_formattedDataBuffer.data());
                 ULONG formattedDataBufferSize = static_cast<ULONG>(m_formattedDataBuffer.capacity());
