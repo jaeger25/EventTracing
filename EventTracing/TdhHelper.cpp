@@ -30,7 +30,7 @@ namespace winrt::FourShot::EventTracing
         }
         else
         {
-            if (propertyInfo.length > 0)
+            if ((propertyInfo.Flags & PropertyStruct) == PropertyStruct || propertyInfo.length > 0)
             {
                 return propertyInfo.length;
             }
@@ -48,11 +48,13 @@ namespace winrt::FourShot::EventTracing
                 }
                 else if (TDH_INTYPE_UNICODESTRING == propertyInfo.nonStructType.InType)
                 {
-                    return static_cast<USHORT>(wcslen(reinterpret_cast<LPWSTR>(pUserData)));
+                    auto length = static_cast<USHORT>(wcsnlen_s(reinterpret_cast<PWSTR>(pUserData), UNICODE_STRING_MAX_CHARS) + 1);
+                    return length == 1 ? 0 : length;
                 }
                 else if (TDH_INTYPE_ANSISTRING == propertyInfo.nonStructType.InType)
                 {
-                    return static_cast<USHORT>(strlen(reinterpret_cast<LPSTR>(pUserData)));
+                    auto length = static_cast<USHORT>(strnlen_s(reinterpret_cast<LPSTR>(pUserData), UNICODE_STRING_MAX_CHARS) + 1);
+                    return length == 1 ? 0 : length;
                 }
                 else if (TDH_INTYPE_SID == propertyInfo.nonStructType.InType)
                 {
