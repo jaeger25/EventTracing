@@ -48,13 +48,11 @@ namespace winrt::FourShot::EventTracing
                 }
                 else if (TDH_INTYPE_UNICODESTRING == propertyInfo.nonStructType.InType)
                 {
-                    auto length = static_cast<USHORT>(wcsnlen_s(reinterpret_cast<PWSTR>(pUserData), UNICODE_STRING_MAX_CHARS) + 1);
-                    return length == 1 ? 0 : length;
+                    return static_cast<USHORT>(wcsnlen_s(reinterpret_cast<PWSTR>(pUserData), UNICODE_STRING_MAX_CHARS) + 1);
                 }
                 else if (TDH_INTYPE_ANSISTRING == propertyInfo.nonStructType.InType)
                 {
-                    auto length = static_cast<USHORT>(strnlen_s(reinterpret_cast<LPSTR>(pUserData), UNICODE_STRING_MAX_CHARS) + 1);
-                    return length == 1 ? 0 : length;
+                    return static_cast<USHORT>(strnlen_s(reinterpret_cast<LPSTR>(pUserData), UNICODE_STRING_MAX_CHARS) + 1);
                 }
                 else if (TDH_INTYPE_SID == propertyInfo.nonStructType.InType)
                 {

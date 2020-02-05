@@ -241,7 +241,10 @@ namespace winrt::FourShot::EventTracing::implementation
                     pFormattedData,
                     &userDataConsumed));
 
-                propertyPairs[0].second = propertyPairs[0].second + pFormattedData;
+                if (*pFormattedData != L'\0')
+                {
+                    propertyPairs[0].second = propertyPairs[0].second + pFormattedData;
+                }
                 *ppUserData += userDataConsumed;
 
                 if (i + 1 < arraySize)
